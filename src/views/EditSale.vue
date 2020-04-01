@@ -8,11 +8,11 @@
 -->
 
   <div class="EditSale">
-
+	<div class="fieldSection" @submit.prevent="editSale">
     <div class="fields status">
       <b-field label="Status:">
         <b-select
-          v-model="sale.statusSelected"
+          v-model="sale.statusId"
           placeholder="Ändra status">
           <option value="0">Ej påbörjad</option>
           <option value="1">Pågående</option>
@@ -44,7 +44,8 @@
         :articles="articles"
         v-for="(row, index) in sale.articleRows"
         v-bind:key="row.Id"
-        v-model="sale.articleRows[index]"/>
+        v-model="sale.articleRows[index]">
+			</Article-row>
 
       <div class="fields">
         <b-button @click="addArticleRow">Lägg till artikel</b-button>
@@ -73,7 +74,6 @@
         <div class="fields">
           <b-field label="Datum Färdig:">
             <b-datepicker
-              v-model="sale.dateDone"
               placeholder="Click to select..."
               icon="calendar-today">
             </b-datepicker>
@@ -87,6 +87,7 @@
         </b-button>
       </div>
     </div>
+	</div>
   </div>
 </template>
 
@@ -109,30 +110,50 @@ export default {
   components: {
     ArticleRow
   },
-  props: {
-  },
+  props: ['saleId'],
 
   data() {
     return {
       sale: {
+	id: 0,
+	reference: "",
+        dateSold: [],
+        dateCreated: [],
+        statusId: 0,
         customer: {
           name: "",
           customerNumber: ""
         },
-        articleRows: [baseArticleRow],
-        reference: "",
-        dateSold: [],
-        dateCreated: [],
-        statusId: 0,
+        articleRows: [baseArticleRow]
       },
+      customers: [],
+      articles: []
     };
   },
-
+  mounted() {
+    this.fetchData();
+	},
   methods: {
-    putData() {
-      this.$http.put("/api/sale")
-      .then(result => {this.id = result.id})
-      .catch(error => console.log(error))
+    fetchData() {
+	this.$http.get(`/api/sale/${saleId}`).then(result => {
+        this.sale = result.data;
+      });
+
+      this.$http.get("/api/customer").then(result => {
+        this.customers = result.data;
+      });
+
+      this.$http.get("/api/article").then(result => {
+        this.articles = result.data;
+      });
+    },
+    addArticleRow() {
+      this.sale.articleRows.push(Object.assign({}, baseArticleRow));
+		},
+    putData: function() {
+      this.$http.put(`/api/sale/${saleId}`, { SaleVm: JSON.stringify(this.sale) })
+                                                .then(result => {this.id = result.id})
+                                                .catch(error => console.log(error))
     }
   }
 };

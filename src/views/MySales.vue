@@ -62,7 +62,7 @@
           </b-table-column>
 
           <b-table-column field="" label="Åtgärd">
-            <b-button class="saveBtn" outlined type="submit"><router-link to="/EditSale">Redigera</router-link></b-button>
+            <b-button class="saveBtn" outlined type="submit"><router-link :to="{ name: 'EditSale', params: { saleId: props.row.id } }">Redigera</router-link></b-button>
             <b-button class="saveBtn" outlined type="submit" @click="deleteData(props.row.id)">Ta bort</b-button>
 					</b-table-column>
         </template>

@@ -64,7 +64,7 @@
         <div class="fields inputfield">
           <b-field label="Status:">
           <b-select
-            v-model="sale.statusSelected"
+            v-model="sale.statusId"
             placeholder="Ändra status">
             <option value="0">Ej påbörjad</option>
             <option value="1">Pågående</option>
@@ -110,19 +110,20 @@ export default {
   data() {
     return {
       sale: {
+	id: 0,
+	reference: "",
+        dateSold: [],
+        dateCreated: [],
+        statusId: 0,
         customer: {
           name: "",
           customerNumber: ""
         },
-        articleRows: [baseArticleRow],
-        reference: "",
-        dateSold: [],
-        dateCreated: [],
-        statusId: [],
+        articleRows: [baseArticleRow]
       },
       customers: [],
       articles: [],
-			customerSearchQuery: "",
+      customerSearchQuery: "",
     };
   },
 
@@ -142,7 +143,7 @@ export default {
     },
  
     postData: function() {
-      this.$http.post("/api/sale", {sale: this.sale})
+      this.$http.post("/api/sale", { SaleVm: JSON.stringify(this.sale) })
 				.then(result => {this.sale = result.sale})
 				.catch(error => (console.log(error.result)))
 		},

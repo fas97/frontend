@@ -34,9 +34,10 @@ export default new Router({
       component: Sale
     },
     {
-      path: `/EditSale`, //${id}
+      path: `/EditSale/:saleId`, //${id}
       name: "EditSale",
-      component: EditSale
+      component: EditSale,
+      props: true,
     },
     {
       path: "/MySales",
