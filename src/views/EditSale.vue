@@ -135,7 +135,7 @@ export default {
 	},
   methods: {
     fetchData() {
-	this.$http.get(`/api/sale/${saleId}`).then(result => {
+	this.$http.get(`/api/sale/${this.saleId}`).then(result => {
         this.sale = result.data;
       });
 
@@ -151,7 +151,7 @@ export default {
       this.sale.articleRows.push(Object.assign({}, baseArticleRow));
 		},
     putData: function() {
-      this.$http.put(`/api/sale/${saleId}`, { SaleVm: JSON.stringify(this.sale) })
+      this.$http.put(`/api/sale/${this.saleId}`, { SaleVm: JSON.stringify(this.sale) })
                                                 .then(result => {this.id = result.id})
                                                 .catch(error => console.log(error))
     }
